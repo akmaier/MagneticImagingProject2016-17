@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 import math
 from numpy import linalg as LA
@@ -20,14 +19,14 @@ def M_no_relax(M_init, B, t):
         #print ("M " + str(M))
         M_dot = M_dot_no_relax(M, B)
         #print ("M_dot", M_dot, str(LA.norm(M - M_dot)))
-        step = 0.001# * LA.norm(M - M_dot)
+        step = 0.00001
         M = M + step * M_dot
         a = a + 1
     return result
 
 M = [0.006, 0, 0]
 B = [0, 0, 1]
-data = M_no_relax(M, B, 200)
+data = M_no_relax(M, B, 20000)
 #fig = plt.figure()
 #ax = fig.add_subplot(111, projection='3d')
 data2 = np.transpose(np.reshape(data, (len(data),3), order='F'))
