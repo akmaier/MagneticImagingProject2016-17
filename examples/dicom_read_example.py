@@ -55,18 +55,27 @@ def animate(i):
     pyplot.subplot(1,2,1)
     return pyplot.pcolormesh(x, y, numpy.flipud(ArrayDicom[:, :, i])),
 
-# Uncomment for animation
+
 anim = animation.FuncAnimation(fig, animate, init_func=init,
                                frames=17, interval=1000, blit=False)
 
-#Identified a good point at 120, 52
+def onclick(event):
+    print('button=%d, x=%d, y=%d, xdata=%f, ydata=%f' %
+          (event.button, event.x, event.y, event.xdata, event.ydata))
+    pyplot.subplot(1,2,2)
+    # note that the coordinates need to be converted from world coordinates to pixels.
+    OnePoint = ArrayDicom[int(round(RefDs.Columns-(event.ydata/ConstPixelSpacing[1]))), int(round((event.xdata/ConstPixelSpacing[0]))), :]
+    #print (ConstPixelSpacing[0], ConstPixelSpacing[1], round((event.xdata)), round((event.ydata)), OnePoint)
+    pyplot.plot(OnePoint)
+    pyplot.draw()
+
+cid = fig.canvas.mpl_connect('button_press_event', onclick)
 
 pyplot.subplot(1,2,2)
-
+#Identified a good point at 120, 52
 OnePoint = ArrayDicom[119, 52, :]
 #print (OnePoint)
-
-fig2 = pyplot.plot(OnePoint)
+pyplot.plot(OnePoint)
 
 pyplot.show()
 
