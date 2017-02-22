@@ -1,6 +1,7 @@
 import dicom
 import os
 import numpy
+from matplotlib import animation
 from matplotlib import pyplot, cm
 
 
@@ -36,8 +37,36 @@ for filenameDCM in lstFilesDCM:
     ArrayDicom[:, :, lstFilesDCM.index(filenameDCM)] = ds.pixel_array  
     
     
-pyplot.figure(dpi=100)
-pyplot.axes().set_aspect('equal', 'datalim')
+
+
+    
+fig=pyplot.figure(dpi=150)
+pyplot.subplot(1,2,1)
+#pyplot.axes().set_aspect('equal', 'datalim')
 pyplot.set_cmap(pyplot.gray())
 pyplot.pcolormesh(x, y, numpy.flipud(ArrayDicom[:, :, 17]))
+
+
+def init():
+    pyplot.subplot(1,2,1)
+    return pyplot.pcolormesh(x, y, numpy.flipud(ArrayDicom[:, :, 0])),
+
+def animate(i):
+    pyplot.subplot(1,2,1)
+    return pyplot.pcolormesh(x, y, numpy.flipud(ArrayDicom[:, :, i])),
+
+# Uncomment for animation
+anim = animation.FuncAnimation(fig, animate, init_func=init,
+                               frames=17, interval=1000, blit=False)
+
+#Identified a good point at 120, 52
+
+pyplot.subplot(1,2,2)
+
+OnePoint = ArrayDicom[119, 52, :]
+#print (OnePoint)
+
+fig2 = pyplot.plot(OnePoint)
+
 pyplot.show()
+
