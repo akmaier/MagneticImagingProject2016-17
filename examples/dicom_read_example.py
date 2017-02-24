@@ -2,7 +2,7 @@ import dicom
 import os
 import numpy
 from matplotlib import animation
-from matplotlib import pyplot, cm
+from matplotlib import pyplot
 
 
 PathDicom = "../data/"
@@ -36,11 +36,8 @@ for filenameDCM in lstFilesDCM:
     # store the raw image data
     ArrayDicom[:, :, lstFilesDCM.index(filenameDCM)] = ds.pixel_array  
     
-    
-
-
-    
-fig=pyplot.figure(dpi=150)
+        
+fig=pyplot.figure(dpi=100)
 pyplot.subplot(1,2,1)
 #pyplot.axes().set_aspect('equal', 'datalim')
 pyplot.set_cmap(pyplot.gray())
@@ -57,23 +54,26 @@ def animate(i):
 
 
 anim = animation.FuncAnimation(fig, animate, init_func=init,
-                               frames=17, interval=1000, blit=False)
+                               frames=len(lstFilesDCM), interval=1000, blit=False)
 
 def onclick(event):
     print('button=%d, x=%d, y=%d, xdata=%f, ydata=%f' %
           (event.button, event.x, event.y, event.xdata, event.ydata))
     pyplot.subplot(1,2,2)
     # note that the coordinates need to be converted from world coordinates to pixels.
-    OnePoint = ArrayDicom[int(round(RefDs.Columns-(event.ydata/ConstPixelSpacing[1]))), int(round((event.xdata/ConstPixelSpacing[0]))), :]
+    OnePoint = ArrayDicom[int(round(RefDs.Rows-(event.ydata/ConstPixelSpacing[1]))), int(round((event.xdata/ConstPixelSpacing[0]))), :]
     #print (ConstPixelSpacing[0], ConstPixelSpacing[1], round((event.xdata)), round((event.ydata)), OnePoint)
     pyplot.plot(OnePoint)
+    
+    # compute T1 time
+    
     pyplot.draw()
 
 cid = fig.canvas.mpl_connect('button_press_event', onclick)
 
 pyplot.subplot(1,2,2)
 #Identified a good point at 120, 52
-OnePoint = ArrayDicom[119, 52, :]
+OnePoint = ArrayDicom[120, 52, :]
 #print (OnePoint)
 pyplot.plot(OnePoint)
 

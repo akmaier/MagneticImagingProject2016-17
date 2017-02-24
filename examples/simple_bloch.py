@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import math
-from numpy import linalg as LA
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import animation
 from matplotlib.widgets import Button
@@ -45,12 +44,12 @@ def Mdown(event):
     global M
     M = M * 0.9
     
-axprev = plt.axes([0.7, 0.85, 0.1, 0.075])
-axnext = plt.axes([0.81, 0.85, 0.1, 0.075])
-bnext = Button(axnext, 'M up')
-bnext.on_clicked(Mup)
-bprev = Button(axprev, 'M down')
-bprev.on_clicked(Mdown)
+axMdown = plt.axes([0.7, 0.85, 0.1, 0.075])
+axMup = plt.axes([0.81, 0.85, 0.1, 0.075])
+bMup = Button(axMup, 'M up')
+bMup.on_clicked(Mup)
+bMdown = Button(axMdown, 'M down')
+bMdown.on_clicked(Mdown)
 
 def updateAnimation(M_init, B, t):
     ax.cla()
@@ -69,7 +68,7 @@ def init():
 def animate(i):
     return updateAnimation(M, B, 2000),
 
-updateAnimation(M, B, 2000)    
+#updateAnimation(M, B, 2000)    
 
 anim = animation.FuncAnimation(fig, animate, init_func=init,
                                frames=1, interval=2, blit=False)
