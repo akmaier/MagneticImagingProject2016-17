@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import math
 from numpy import linalg as LA
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib import animation
 
 # gamma / 2 Pi in n MHz·T−1
 gamma = 42.576
@@ -19,17 +21,43 @@ def M_no_relax(M_init, B, t):
         #print ("M " + str(M))
         M_dot = M_dot_no_relax(M, B)
         #print ("M_dot", M_dot, str(LA.norm(M - M_dot)))
-        step = 0.00001
+        step = 0.000001
         M = M + step * M_dot
         a = a + 1
     return result
 
+limit = 0.01
 M = [0.006, 0, 0]
 B = [0, 0, 1]
-data = M_no_relax(M, B, 20000)
-#fig = plt.figure()
-#ax = fig.add_subplot(111, projection='3d')
-data2 = np.transpose(np.reshape(data, (len(data),3), order='F'))
-plt.plot(data2[0], data2[1])
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.set_xlim3d(-limit, limit)
+ax.set_ylim3d(-limit, limit)
+ax.set_zlim3d(-limit, limit) 
+
+def updateAnimation(M_init, B, t):
+    ax.cla()
+    ax.set_xlim3d(-limit, limit)
+    ax.set_ylim3d(-limit, limit)
+    ax.set_zlim3d(-limit, limit) 
+    data = M_no_relax(M_init, B, t)
+    global M 
+    M = data[int((len(data)-1)*0.25)]
+    data2 = np.transpose(np.reshape(data, (len(data),3), order='F'))
+    return ax.plot(data2[0], data2[1], data2[2], label='Magnetization')
+
+def init():
+    return updateAnimation(M, B, 2000),
+
+def animate(i):
+    return updateAnimation(M, B, 2000),
+
+updateAnimation(M, B, 2000)    
+
+anim = animation.FuncAnimation(fig, animate, init_func=init,
+                               frames=1, interval=2, blit=False)
+
 plt.show()
     
+    
+
