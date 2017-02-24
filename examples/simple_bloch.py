@@ -4,6 +4,7 @@ import math
 from numpy import linalg as LA
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import animation
+from matplotlib.widgets import Button
 
 # gamma / 2 Pi in n MHz·T−1
 gamma = 42.576
@@ -34,6 +35,22 @@ ax = fig.add_subplot(111, projection='3d')
 ax.set_xlim3d(-limit, limit)
 ax.set_ylim3d(-limit, limit)
 ax.set_zlim3d(-limit, limit) 
+
+#code to create buttons
+def Mup(event):
+    global M
+    M = M *1.1
+    
+def Mdown(event):
+    global M
+    M = M * 0.9
+    
+axprev = plt.axes([0.7, 0.85, 0.1, 0.075])
+axnext = plt.axes([0.81, 0.85, 0.1, 0.075])
+bnext = Button(axnext, 'M up')
+bnext.on_clicked(Mup)
+bprev = Button(axprev, 'M down')
+bprev.on_clicked(Mdown)
 
 def updateAnimation(M_init, B, t):
     ax.cla()
